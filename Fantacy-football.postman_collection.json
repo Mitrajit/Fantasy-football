@@ -1,0 +1,167 @@
+{
+	"info": {
+		"_postman_id": "72653c94-a82d-4d91-a009-b418b3476ad1",
+		"name": "Fantacy-football",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17584405"
+	},
+	"item": [
+		{
+			"name": "/operatorGameType",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/operatorGameType?operator=DraftKings",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"operatorGameType"
+					],
+					"query": [
+						{
+							"key": "operator",
+							"value": "DraftKings"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/operatorName",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/operatorName?operator=DraftKings&operatorGameType=Showdown Captain Mode",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"operatorName"
+					],
+					"query": [
+						{
+							"key": "operator",
+							"value": "DraftKings"
+						},
+						{
+							"key": "operatorGameType",
+							"value": "Showdown Captain Mode"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/operator",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/operator",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"operator"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/players",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/players?operator=DraftKings&operatorGameType=Classic&operatorName=Early Only",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"players"
+					],
+					"query": [
+						{
+							"key": "operator",
+							"value": "DraftKings"
+						},
+						{
+							"key": "operatorGameType",
+							"value": "Classic"
+						},
+						{
+							"key": "operatorName",
+							"value": "Early Only"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/players/best",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/players/best?operator=DraftKings&operatorGameType=Classic&operatorName=Early Only",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"players",
+						"best"
+					],
+					"query": [
+						{
+							"key": "operator",
+							"value": "DraftKings"
+						},
+						{
+							"key": "operatorGameType",
+							"value": "Classic"
+						},
+						{
+							"key": "operatorName",
+							"value": "Early Only"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://127.0.0.1:5000",
+			"type": "string"
+		}
+	]
+}
