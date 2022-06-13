@@ -1,8 +1,10 @@
 const express = require('express');
+require('dotenv').config();
 
 const app = express();
 const operatorRouter = require('./routes/operator');
 const playersRouter = require('./routes/players');
+require('./services/mongoDB');
 
 app.use('/', operatorRouter);
 app.use('/players', playersRouter);

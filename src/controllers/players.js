@@ -1,24 +1,26 @@
-const jsondata = require('../../data/data.json');
+const games = require('../models/model');
 
-exports.players = (req, res) => {
+exports.players = async (req, res) => {
   // ?operator=&operatorGameType=&operatorName=? ->
   // list all players based on operator, operator game type and operator name
   try {
     const { operator, operatorGameType, operatorName } = req.query;
-    if (!operator && !operatorGameType && !operatorName) {
+    if (!operator || !operatorGameType || !operatorName) {
       res.status(404).send({
         status: 'INCOMPLETE QUERY',
         message: 'No players returned because proper query was not provided',
       });
+    } else {
+      const allplayers = await games.find(
+        { $and: [{ operator }, { operatorGameType }, { operatorName }] },
+        { dfsSlatePlayers: 1 },
+      );
+      const players = [];
+      allplayers.forEach((data) => {
+        players.push(...data.dfsSlatePlayers);
+      });
+      res.send(players);
     }
-
-    const players = [];
-    jsondata.forEach((data) => {
-      if (operator === data.operator
-                    && operatorGameType === data.operatorGameType
-                     && operatorName === data.operatorName) players.push(data.dfsSlatePlayers);
-    });
-    res.send(players);
   } catch (err) {
     res.status(500).send({
       status: 'SERVER ERROR',
@@ -27,33 +29,24 @@ exports.players = (req, res) => {
   }
 };
 
-exports.best = (req, res) => {
+exports.best = async (req, res) => {
   // ?operator=&operatorGameType=&operatorName=? - Return the highest points player.
   try {
     const { operator, operatorGameType, operatorName } = req.query;
-    if (!operator && !operatorGameType && !operatorName) {
+    if (!operator || !operatorGameType || !operatorName) {
       res.status(404).send({
         status: 'INCOMPLETE QUERY',
         message: 'No players returned because proper query was not provided',
       });
     } else {
-      let players = [];
-      let max = 0;
-      jsondata.forEach((gameData) => {
-        if (operator === gameData.operator
-                    && operatorGameType === gameData.operatorGameType
-                    && operatorName === gameData.operatorName) {
-          gameData.dfsSlatePlayers.forEach((player) => {
-            if (player.fantasyPoints > max) {
-              max = player.fantasyPoints;
-              players = [player];
-            } else if (player.fantasyPoints === max) {
-              players.push(player);
-            }
-          });
-        }
-      });
-      res.send(players);
+      const player = (await games.aggregate([
+        { $match: { $and: [{ operator }, { operatorGameType }, { operatorName }] } },
+        { $unwind: '$dfsSlatePlayers' },
+        { $group: { _id: '$dfsSlatePlayers.fantasyPoints', highest: { $push: '$dfsSlatePlayers' } } },
+        { $sort: { _id: -1 } },
+        { $limit: 1 },
+      ]))[0].highest;
+      res.send(player);
     }
   } catch (err) {
     res.status(500).send({

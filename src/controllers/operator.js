@@ -1,12 +1,8 @@
-const jsondata = require('../../data/data.json');
+const games = require('../models/model');
 
-exports.operator = (req, res) => {
+exports.operator = async (req, res) => {
   try {
-    const operators = new Set();
-    jsondata.forEach((data) => {
-      operators.add(data.operator);
-    });
-    res.send(Array.from(operators));
+    res.send(await games.distinct('operator'));
   } catch (err) {
     res.status(500).send({
       status: 'SERVER ERROR',
@@ -15,16 +11,12 @@ exports.operator = (req, res) => {
   }
 };
 
-exports.operatorGameType = (req, res) => {
+exports.operatorGameType = async (req, res) => {
   try {
+    const { operator } = req.query;
     // List all unique game types -> List all operatorGameType based on operator
-    const operatorGameTypes = new Set();
-    jsondata.forEach((data) => {
-      if (!req.query.operator) operatorGameTypes.add(data.operatorGameType);
-      else
-      if (req.query.operator === data.operator) operatorGameTypes.add(data.operatorGameType);
-    });
-    res.send(Array.from(operatorGameTypes));
+    if (operator) res.send(await games.distinct('operatorGameType', { operator }));
+    else res.send(await games.distinct('operatorGameType'));
   } catch (err) {
     res.status(500).send({
       status: 'SERVER ERROR',
@@ -33,26 +25,18 @@ exports.operatorGameType = (req, res) => {
   }
 };
 
-exports.operatorName = (req, res) => {
+exports.operatorName = async (req, res) => {
   // ?operator=Fanduel&operatorGameType=Single Game ->
   //  List all operatorNames based on operator and operatorGameType
   try {
-    const operatorNames = new Set();
-    jsondata.forEach((data) => {
-      const { operator, operatorGameType } = req.query;
-      if (!operator && !operatorGameType) {
-        operatorNames.add(data.operatorName);
-      } else if (operator && operatorGameType) {
-        if (operator === data.operator
-          && operatorGameType === data.operatorGameType) {
-          operatorNames.add(data.operatorName);
-        }
-      } else if (operator === data.operator
-        || operatorGameType === data.operatorGameType) {
-        operatorNames.add(data.operatorName);
-      }
-    });
-    res.send(Array.from(operatorNames));
+    const { operator, operatorGameType } = req.query;
+    if (!operator && !operatorGameType) {
+      res.send(await games.distinct('operatorName'));
+    } else if (operator && operatorGameType) {
+      res.send(await games.distinct('operatorName', { operator, operatorGameType }));
+    } else {
+      res.send(await games.distinct('operatorName', { $or: [{ operator }, { operatorGameType }] }));
+    }
   } catch (err) {
     res.status(500).send({
       status: 'SERVER ERROR',
