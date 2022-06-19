@@ -1,4 +1,4 @@
-const games = require('../models/model.js');
+const games = require('../models/model');
 
 exports.operator = async (req, res) => {
   try {

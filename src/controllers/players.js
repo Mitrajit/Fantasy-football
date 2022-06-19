@@ -1,4 +1,4 @@
-const games = require('../models/model.js');
+const games = require('../models/model');
 
 exports.players = async (req, res) => {
   // ?operator=&operatorGameType=&operatorName=? ->
