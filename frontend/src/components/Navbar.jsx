@@ -37,7 +37,7 @@ const ResponsiveAppBar = () => {
               textDecoration: 'none',
             }}
           >
-            Fantacy Football
+            Fantasy Football
           </Typography>
         </Toolbar>
       </Container>
