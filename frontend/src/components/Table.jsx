@@ -51,11 +51,13 @@ export default function DataGridDemo(props) {
   const [image, setImage] = React.useState(null);
   const selectionModelChange = (rowid) => {
     const row = rows.find(row => row.id === rowid[0]);
-    setName(row.name);
-    setPoints(row.points);
-    fetch('/playerImage?'+ new URLSearchParams({name: row.name})).then(res => res.json()).then(data => {
-      setImage(data.imageURL);
-    });
+    if (row) {
+      setName(row.name);
+      setPoints(row.points);
+      fetch('/playerImage?' + new URLSearchParams({ name: row.name })).then(res => res.json()).then(data => {
+        setImage(data.imageURL);
+      });
+    }
   }
 
   return (
@@ -69,9 +71,9 @@ export default function DataGridDemo(props) {
         pageSize={pageSize}
         onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
         rowsPerPageOptions={[5, 10, 20, 50, 100]}
-        pagination 
+        pagination
         onSelectionModelChange={selectionModelChange}
-        />
+      />
       <Box component='div' sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -88,18 +90,18 @@ export default function DataGridDemo(props) {
           width: '100%',
           marginBottom: '10px',
           borderRadius: '8px',
-        }}/>}
+        }} />}
         {name}
         <Box component='span' sx={{
           fontSize: '5rem',
           margin: '10px',
         }}>{points}</Box>
         <Box component='span' sx={{
-          fontSize: '0.9rem', 
+          fontSize: '0.9rem',
         }}>
-        {points && 'Points'}
+          {points && 'Points'}
         </Box>
-        </Box>
+      </Box>
 
     </Container>
   );
